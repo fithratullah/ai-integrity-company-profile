@@ -479,6 +479,158 @@
     .kpi-trend { font-size: 12px; margin-top: 6px; }
     .trend-up   { color: var(--green); }
     .trend-down { color: var(--red); }
+
+    /* ── CHATBOT ─────────────────────────────────── */
+    .chat-toggle {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(11,85,119,.45);
+      transition: background .2s, transform .2s, box-shadow .2s;
+      z-index: 1000;
+      color: var(--white);
+    }
+    .chat-toggle:hover { background: var(--teal-light); transform: scale(1.08); box-shadow: 0 6px 28px rgba(11,85,119,.55); }
+    .chat-toggle.open { background: var(--navy); }
+    .chat-toggle svg { width: 23px; height: 23px; }
+
+    .chat-panel {
+      position: fixed;
+      bottom: 94px;
+      right: 28px;
+      width: 384px;
+      height: 540px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 18px;
+      box-shadow: 0 20px 64px rgba(6,27,42,.18);
+      display: flex;
+      flex-direction: column;
+      z-index: 999;
+      overflow: hidden;
+      transform: scale(0.88) translateY(24px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform .22s cubic-bezier(.34,1.56,.64,1), opacity .16s;
+      transform-origin: bottom right;
+    }
+    .chat-panel.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+
+    .chat-header {
+      background: var(--navy);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .chat-header-info { display: flex; align-items: center; gap: 10px; }
+    .chat-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal-light), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head); font-size: 12px; font-weight: 800; color: var(--white);
+      flex-shrink: 0;
+    }
+    .chat-name { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--white); }
+    .chat-online { font-size: 11px; color: #4ade80; display: flex; align-items: center; gap: 4px; margin-top: 1px; }
+    .chat-online::before { content:''; width:6px; height:6px; background:#4ade80; border-radius:50%; display:inline-block; }
+    .chat-close {
+      width: 28px; height: 28px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,.1); color: rgba(255,255,255,.6);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; transition: background .15s; flex-shrink: 0;
+    }
+    .chat-close:hover { background: rgba(255,255,255,.2); color: var(--white); }
+
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 4px; }
+
+    .msg { display: flex; gap: 8px; align-items: flex-end; }
+    .msg.user { flex-direction: row-reverse; }
+    .msg-av {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: var(--white);
+    }
+    .msg.ai .msg-av { background: linear-gradient(135deg, var(--teal-light), var(--accent)); }
+    .msg.user .msg-av { background: var(--navy); }
+    .msg-bubble {
+      max-width: 80%; padding: 10px 14px; border-radius: 14px;
+      font-size: 13px; line-height: 1.6;
+    }
+    .msg.ai .msg-bubble {
+      background: var(--gray-50); border: 1px solid var(--gray-200);
+      border-bottom-left-radius: 4px; color: var(--gray-800);
+    }
+    .msg.user .msg-bubble {
+      background: var(--teal); color: var(--white);
+      border-bottom-right-radius: 4px;
+    }
+    .msg-bubble strong { font-weight: 700; }
+    .msg-bubble ul { padding-left: 16px; margin: 6px 0; }
+    .msg-bubble li { margin-bottom: 3px; }
+    .ctag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 1px 7px; border-radius: 100px;
+      background: rgba(0,196,255,.12); color: var(--teal-light);
+      margin: 1px 2px;
+    }
+    .ctag.rh { background: rgba(239,68,68,.12); color: #ef4444; }
+    .ctag.rm { background: rgba(245,158,11,.12); color: #d97706; }
+    .ctag.rl { background: rgba(34,197,94,.12);  color: #16a34a; }
+
+    .typing-bubble { display: flex; align-items: center; gap: 4px; padding: 12px 14px; }
+    .typing-dot { width:6px; height:6px; background:var(--gray-400); border-radius:50%; animation: tbounce 1.2s infinite; }
+    .typing-dot:nth-child(2) { animation-delay:.2s; }
+    .typing-dot:nth-child(3) { animation-delay:.4s; }
+    @keyframes tbounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+    .chat-chips {
+      padding: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;
+      border-top: 1px solid var(--gray-100); flex-shrink: 0;
+    }
+    .chip {
+      font-size: 11px; font-weight: 500; color: var(--teal);
+      background: rgba(11,85,119,.06); border: 1px solid rgba(11,85,119,.15);
+      border-radius: 100px; padding: 4px 10px; cursor: pointer;
+      transition: background .15s; font-family: var(--font-body); white-space: nowrap;
+    }
+    .chip:hover { background: rgba(11,85,119,.13); }
+
+    .chat-input-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px 14px; border-top: 1px solid var(--gray-100); flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1; border: 1px solid var(--gray-200); border-radius: 20px;
+      padding: 8px 14px; font-size: 13px; font-family: var(--font-body);
+      color: var(--gray-800); background: var(--gray-50); outline: none;
+      transition: border-color .15s;
+    }
+    .chat-input:focus { border-color: var(--teal-light); background: var(--white); }
+    .chat-input::placeholder { color: var(--gray-400); }
+    .chat-send {
+      width: 34px; height: 34px; border-radius: 50%; background: var(--teal);
+      border: none; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; color: var(--white); flex-shrink: 0; transition: background .15s;
+    }
+    .chat-send:hover { background: var(--teal-light); }
+    .chat-send svg { width: 14px; height: 14px; }
   </style>
 </head>
 <body>
@@ -945,6 +1097,53 @@
 
   </div><!-- /page -->
 
+  <!-- ── CHATBOT ──────────────────────────────────── -->
+  <button class="chat-toggle" id="chatToggle" title="Ask AI Assistant">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
+
+  <div class="chat-panel" id="chatPanel">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-avatar">AI</div>
+        <div>
+          <div class="chat-name">AIIS Assistant</div>
+          <div class="chat-online">Online</div>
+        </div>
+      </div>
+      <button class="chat-close" id="chatClose">&times;</button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg ai">
+        <div class="msg-av">AI</div>
+        <div class="msg-bubble">
+          Hello! I'm your <strong>AIIS AI Assistant</strong>. I can help you query assets, risk levels, inspection status, anomalies, and KPIs.<br><br>
+          What would you like to know?
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-chips">
+      <button class="chip">High risk assets?</button>
+      <button class="chip">Overdue inspections</button>
+      <button class="chip">Open anomalies</button>
+      <button class="chip">Production KPIs</button>
+    </div>
+
+    <div class="chat-input-row">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Ask about any asset…" autocomplete="off" />
+      <button class="chat-send" id="chatSend">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
   <script>
     const tabs = document.querySelectorAll('.nav-tab');
     const sections = document.querySelectorAll('.section');
@@ -958,6 +1157,253 @@
         document.getElementById('section-' + target).classList.add('active');
       });
     });
+  </script>
+
+  <script>
+    // ── CHATBOT ──────────────────────────────────────────────
+    const chatToggle  = document.getElementById('chatToggle');
+    const chatPanel   = document.getElementById('chatPanel');
+    const chatClose   = document.getElementById('chatClose');
+    const chatMessages= document.getElementById('chatMessages');
+    const chatInput   = document.getElementById('chatInput');
+    const chatSend    = document.getElementById('chatSend');
+
+    chatToggle.addEventListener('click', () => {
+      chatPanel.classList.toggle('open');
+      chatToggle.classList.toggle('open');
+    });
+    chatClose.addEventListener('click', () => {
+      chatPanel.classList.remove('open');
+      chatToggle.classList.remove('open');
+    });
+
+    document.querySelectorAll('.chip').forEach(btn => {
+      btn.addEventListener('click', () => sendMessage(btn.textContent.trim()));
+    });
+    chatSend.addEventListener('click', () => {
+      const v = chatInput.value.trim();
+      if (v) sendMessage(v);
+    });
+    chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { const v = chatInput.value.trim(); if (v) sendMessage(v); }
+    });
+
+    function addMsg(html, role) {
+      const initials = role === 'user' ? 'JD' : 'AI';
+      const el = document.createElement('div');
+      el.className = `msg ${role}`;
+      el.innerHTML = `<div class="msg-av">${initials}</div><div class="msg-bubble">${html}</div>`;
+      chatMessages.appendChild(el);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showTyping() {
+      const el = document.createElement('div');
+      el.className = 'msg ai'; el.id = 'typingMsg';
+      el.innerHTML = `<div class="msg-av">AI</div><div class="msg-bubble typing-bubble"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+      chatMessages.appendChild(el);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    function removeTyping() { const t = document.getElementById('typingMsg'); if (t) t.remove(); }
+
+    function sendMessage(text) {
+      addMsg(text, 'user');
+      chatInput.value = '';
+      showTyping();
+      setTimeout(() => { removeTyping(); addMsg(getResponse(text), 'ai'); }, 800 + Math.random() * 500);
+    }
+
+    function getResponse(input) {
+      const q = input.toLowerCase();
+
+      if (/^(hi|hello|hey|good\s*(morning|afternoon|evening))/.test(q)) {
+        return `Hello! I can help you with:<br><ul>
+          <li>Asset details — e.g. <em>"Tell me about TK-04"</em></li>
+          <li>Risk levels — e.g. <em>"Which assets are high risk?"</em></li>
+          <li>Inspections — e.g. <em>"Any overdue inspections?"</em></li>
+          <li>Anomalies — e.g. <em>"List open anomalies"</em></li>
+          <li>KPIs — e.g. <em>"What is the production rate?"</em></li>
+          <li>Overview — e.g. <em>"Give me a platform summary"</em></li>
+        </ul>`;
+      }
+
+      if (/tk.?04|tank.?04/.test(q)) {
+        return `<strong>TK-04</strong> — Storage Tank, Tank Farm B<br><br>
+          <strong>Fluid:</strong> Fuel Oil &nbsp;|&nbsp; <strong>Design P:</strong> 5.0 bar &nbsp;|&nbsp; <strong>Design T:</strong> 45°C<br>
+          <strong>Risk:</strong> <span class="ctag rh">High</span> (High PoF × High CoF)<br>
+          <strong>Anomaly:</strong> Wall thinning — bottom plate, SE quadrant <span class="ctag rh">Critical · Open</span><br>
+          <strong>FFS Result:</strong> <span class="ctag rh">Unacceptable</span> — Remaining life: <strong>2.1 yrs</strong>, MAWP: 9.8 bar<br>
+          <strong>Next Inspection:</strong> 15 Jan 2025 (External Visual / CVI)<br><br>
+          ⚠️ Immediate action required — FFS assessment unacceptable.`;
+      }
+
+      if (/\bv.?07\b|vessel.?07/.test(q)) {
+        return `<strong>V-07</strong> — Pressure Vessel, Compression Unit<br><br>
+          <strong>Fluid:</strong> Hydrocarbon Gas &nbsp;|&nbsp; <strong>Design P:</strong> 120.0 bar &nbsp;|&nbsp; <strong>Design T:</strong> 200°C<br>
+          <strong>Risk:</strong> <span class="ctag rh">High</span> (Medium PoF × High CoF)<br>
+          <strong>Anomaly:</strong> Pitting corrosion on nozzle N3 <span class="ctag rh">High · In Progress</span><br>
+          <strong>FFS Result:</strong> <span class="ctag rm">Conditional</span> — Remaining life: <strong>4.5 yrs</strong>, MAWP: 115.0 bar<br>
+          <strong>Inspection:</strong> Thickness Survey (UT) — In Progress, 10 Jan 2025`;
+      }
+
+      if (/pl.?12a|pipeline.?12/.test(q)) {
+        return `<strong>PL-12A</strong> — Pipeline, Header Line<br><br>
+          <strong>Fluid:</strong> Condensate &nbsp;|&nbsp; <strong>Design P:</strong> 40.0 bar &nbsp;|&nbsp; <strong>Status:</strong> Under Review<br>
+          <strong>Risk:</strong> <span class="ctag rm">Medium</span><br>
+          <strong>Anomaly:</strong> Surface crack — 12 o'clock, km 4.2 <span class="ctag rh">High · Open</span><br>
+          <strong>FFS Result:</strong> <span class="ctag rh">Unacceptable</span> — Remaining life: <strong>1.8 yrs</strong>, MAWP: 36.5 bar<br><br>
+          ⚠️ Crack-like flaw — Level 2 FFS result is unacceptable. Immediate re-assessment needed.`;
+      }
+
+      if (/pv.?201/.test(q)) {
+        return `<strong>PV-201</strong> — Pressure Vessel, Processing Unit 2<br><br>
+          <strong>Fluid:</strong> Natural Gas &nbsp;|&nbsp; <strong>Design P:</strong> 85.0 bar<br>
+          <strong>Risk:</strong> <span class="ctag rm">Medium</span> (Low PoF × Medium CoF)<br>
+          <strong>Anomaly:</strong> Coating degradation, shell zone B <span class="ctag rm">Medium · Pending Review</span><br>
+          <strong>FFS Result:</strong> <span class="ctag rl">Acceptable</span> — Remaining life: <strong>8.3 yrs</strong>, MAWP: 84.5 bar<br>
+          <strong>Last Inspection:</strong> Full Inspection (WFMT/UT) — Completed 05 Dec 2024`;
+      }
+
+      if (/hx.?301|heat.?exchanger/.test(q)) {
+        return `<strong>HX-301</strong> — Heat Exchanger, Utilities Block<br><br>
+          <strong>Fluid:</strong> Process Water &nbsp;|&nbsp; <strong>Design P:</strong> 12.0 bar<br>
+          <strong>Risk:</strong> <span class="ctag rl">Low</span><br>
+          <strong>Anomaly:</strong> Tube thinning — pass 2, rows 4–6 <span class="ctag rm">Medium · In Progress</span><br>
+          <strong>FFS Result:</strong> <span class="ctag rl">Acceptable</span> — Remaining life: <strong>6.0 yrs</strong>, MAWP: 11.8 bar<br>
+          <strong>Last Inspection:</strong> Tube Bundle ECT — Completed 01 Nov 2024`;
+      }
+
+      if (/tk.?101/.test(q)) {
+        return `<strong>TK-101A</strong> — Storage Tank, Tank Farm A<br><br>
+          <strong>Fluid:</strong> Crude Oil &nbsp;|&nbsp; <strong>Design P:</strong> 10.3 bar<br>
+          <strong>Risk:</strong> <span class="ctag rl">Low</span><br>
+          <strong>Anomaly:</strong> Minor weld discontinuity — roof-to-shell joint <span class="ctag rl">Low · Closed</span><br>
+          <strong>FFS:</strong> Not assessed<br>
+          <strong>Inspection:</strong> <span class="ctag rh">Overdue</span> — Internal Visual due 25 Sep 2024<br><br>
+          ⚠️ Inspection is overdue. Schedule immediately.`;
+      }
+
+      if (/pv.?220/.test(q)) {
+        return `<strong>PV-220</strong> — Pressure Vessel, Gas Treating Unit<br><br>
+          <strong>Fluid:</strong> Amine &nbsp;|&nbsp; <strong>Design P:</strong> 20.5 bar &nbsp;|&nbsp; <strong>Design T:</strong> 130°C<br>
+          <strong>Material:</strong> SA-516 Gr.70<br>
+          <strong>Status:</strong> <span class="ctag rm">Under Review</span> — No active anomaly or FFS assessment on record yet.`;
+      }
+
+      if (/high.?risk|most.?risk|critical.?asset|riski(est|er)|worst|dangerous/.test(q)) {
+        return `There are <strong>2 high-risk assets</strong> in the current portfolio:<br><br>
+          1. <span class="ctag rh">TK-04</span> Storage Tank — High PoF × High CoF<br>
+          &nbsp;&nbsp;FFS: Unacceptable · Remaining life: 2.1 yrs<br><br>
+          2. <span class="ctag rh">V-07</span> Pressure Vessel — Medium PoF × High CoF<br>
+          &nbsp;&nbsp;FFS: Conditional · Remaining life: 4.5 yrs<br><br>
+          Both require prioritised inspection and engineering review.`;
+      }
+
+      if (/overdue|past.?due|miss(ed|ing).?inspect|late.?inspect/.test(q)) {
+        return `There is <strong>1 overdue inspection</strong>:<br><br>
+          <span class="ctag">TK-101A</span> Storage Tank — Tank Farm A<br>
+          <strong>Type:</strong> Internal Visual (CVI)<br>
+          <strong>Due Date:</strong> 25 Sep 2024<br>
+          <strong>Inspector:</strong> B. Santoso<br><br>
+          Please schedule immediately to maintain compliance.`;
+      }
+
+      if (/open.?anomal|anomal.*(open|unresolv|active)|list.*anomal/.test(q)) {
+        return `<strong>2 open anomalies</strong> require immediate attention:<br><br>
+          <span class="ctag rh">ANO-024-001</span> <strong>TK-04</strong><br>
+          Wall thinning — bottom plate, SE quadrant (Critical)<br>
+          Due: 31 Jan 2025 · Assigned: A. Rahman<br><br>
+          <span class="ctag rh">ANO-024-003</span> <strong>PL-12A</strong><br>
+          Surface crack — 12 o'clock, km 4.2 (High)<br>
+          Due: 15 Jan 2025 · Assigned: C. Wibowo<br><br>
+          Additionally: 5 In Progress, 3 Pending Review, 47 Closed.`;
+      }
+
+      if (/anomal/.test(q)) {
+        return `<strong>Anomaly Register Summary:</strong><br><br>
+          <span class="ctag rh">12 Open</span> &nbsp;
+          <span class="ctag rm">5 In Progress</span> &nbsp;
+          <span class="ctag" style="background:rgba(99,102,241,.12);color:#6366f1">3 Pending Review</span> &nbsp;
+          <span class="ctag rl">47 Closed</span><br><br>
+          <strong>Critical / High:</strong><br>
+          • TK-04 — Wall thinning (Critical, Open)<br>
+          • PL-12A — Surface crack (High, Open)<br>
+          • V-07 — Pitting corrosion (High, In Progress)`;
+      }
+
+      if (/kpi|production.?rate|bopd|inhibitor|operational.?perf/.test(q)) {
+        return `<strong>Current Operational KPIs:</strong><br><br>
+          📊 <strong>Production Rate:</strong> 12,450 BOPD <span class="ctag rl">↑ 3.2%</span><br>
+          🌡️ <strong>Avg. Operating Temp:</strong> 87°C — Stable<br>
+          ⚙️ <strong>Avg. Operating Pressure:</strong> 42.3 bar <span class="ctag rm">↓ 1.1%</span><br>
+          🔬 <strong>Corr. Inhibitor Efficiency:</strong> 94% <span class="ctag rl">↑ 2%</span><br><br>
+          Overall performance is trending positively.`;
+      }
+
+      if (/remain(ing)?.?(life|lifespan|service)|how.?long|lifespan/.test(q)) {
+        return `<strong>Remaining Life — FFS Assessed Assets:</strong><br><br>
+          <span class="ctag rh">PL-12A</span> 1.8 yrs — Unacceptable<br>
+          <span class="ctag rh">TK-04</span> 2.1 yrs — Unacceptable<br>
+          <span class="ctag rm">V-07</span> 4.5 yrs — Conditional<br>
+          <span class="ctag rl">HX-301</span> 6.0 yrs — Acceptable<br>
+          <span class="ctag rl">PV-201</span> 8.3 yrs — Acceptable<br><br>
+          ⚠️ PL-12A and TK-04 have critically short remaining lives — urgent action required.`;
+      }
+
+      if (/unacceptable|urgent|immediate|action.?required/.test(q)) {
+        return `<strong>Assets requiring immediate action:</strong><br><br>
+          1. <span class="ctag rh">TK-04</span> — FFS Level 2, Unacceptable<br>
+          Wall thinning, remaining life 2.1 yrs. Recommend repair or de-rating.<br><br>
+          2. <span class="ctag rh">PL-12A</span> — FFS Level 2, Unacceptable<br>
+          Crack-like flaw, remaining life 1.8 yrs. Immediate FFS re-assessment required.`;
+      }
+
+      if (/inspect(ion)?.?(schedul|upcoming|next|calendar)|schedul.*inspect/.test(q)) {
+        return `<strong>Inspection Overview:</strong><br><br>
+          <span class="ctag" style="background:rgba(14,165,233,.1);color:#0ea5e9">18 Scheduled</span> &nbsp;
+          <span class="ctag rm">4 In Progress</span> &nbsp;
+          <span class="ctag rl">63 Completed</span> &nbsp;
+          <span class="ctag rh">3 Overdue</span><br><br>
+          <strong>Upcoming:</strong><br>
+          • <strong>TK-04</strong> — External Visual (CVI), 15 Jan 2025<br>
+          • <strong>V-07</strong> — Thickness Survey (UT), 10 Jan 2025 (In Progress)`;
+      }
+
+      if (/summar|overview|status|how.*(things|looking|going)|what.*happening/.test(q)) {
+        return `<strong>AIIS Platform — Status Summary</strong><br><br>
+          📦 <strong>Assets:</strong> 248 total (231 Active, 12 Under Review, 5 Decommissioned)<br>
+          ⚠️ <strong>High Risk:</strong> 2 assets — TK-04, V-07<br>
+          🔍 <strong>Inspections:</strong> 3 overdue, 4 in progress, 18 scheduled<br>
+          🚨 <strong>Open Anomalies:</strong> 12 (2 Critical/High priority)<br>
+          📐 <strong>FFS Unacceptable:</strong> TK-04 (2.1 yrs) and PL-12A (1.8 yrs)<br>
+          📊 <strong>Production:</strong> 12,450 BOPD (↑ 3.2%)`;
+      }
+
+      if (/how many|total.?asset|number.?of.?asset|asset.?count/.test(q)) {
+        return `The asset register contains <strong>248 assets</strong> across 4 facilities:<br><br>
+          ✅ <strong>Active:</strong> 231 in service<br>
+          🔄 <strong>Under Review:</strong> 12 pending update<br>
+          🚫 <strong>Decommissioned:</strong> 5 retired<br><br>
+          Equipment includes storage tanks, pressure vessels, pipelines, heat exchangers, and compressors.`;
+      }
+
+      if (/decomm|retire|retired|out.?of.?service/.test(q)) {
+        return `There is <strong>1 decommissioned asset</strong> in the visible register:<br><br>
+          <span class="ctag">C-01</span> Compressor — Comp. Station 1<br>
+          Fluid: Natural Gas · Material: Alloy Steel<br><br>
+          5 decommissioned assets exist in total across all facilities.`;
+      }
+
+      return `I didn't quite catch that. Try asking:<br><ul>
+        <li><em>"Tell me about TK-04"</em> or <em>"What is PL-12A?"</em></li>
+        <li><em>"Which assets are high risk?"</em></li>
+        <li><em>"Any overdue inspections?"</em></li>
+        <li><em>"List open anomalies"</em></li>
+        <li><em>"Remaining life of assets"</em></li>
+        <li><em>"What is the production rate?"</em></li>
+        <li><em>"Give me a platform summary"</em></li>
+      </ul>`;
+    }
   </script>
 
 </body>
