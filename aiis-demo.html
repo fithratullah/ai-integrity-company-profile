@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIIS Live Demo — AI Integrity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #061B2A;
+      --navy-mid:   #0D2D42;
+      --teal:       #0B5577;
+      --teal-light: #1677A8;
+      --teal-dark:  #073A52;
+      --accent:     #00C4FF;
+      --white:      #FFFFFF;
+      --gray-50:    #F8FAFC;
+      --gray-100:   #F1F5F9;
+      --gray-200:   #E2E8F0;
+      --gray-400:   #94A3B8;
+      --gray-600:   #475569;
+      --gray-800:   #1E293B;
+      --green:      #22c55e;
+      --amber:      #f59e0b;
+      --red:        #ef4444;
+      --font-head:  'Space Grotesk', sans-serif;
+      --font-body:  'Inter', sans-serif;
+      --r-sm: 6px; --r-md: 10px; --r-lg: 16px;
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--gray-50);
+      color: var(--gray-800);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAVBAR ─────────────────────────────────── */
+    .navbar {
+      height: 56px;
+      background: var(--navy);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 0;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+      margin-right: 16px;
+      flex-shrink: 0;
+      transition: color .15s;
+      white-space: nowrap;
+    }
+    .nav-back:hover { color: rgba(255,255,255,.75); }
+    .nav-back svg { width: 12px; height: 12px; }
+
+    .nav-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,.1);
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 1px;
+      margin-right: 24px;
+      flex-shrink: 0;
+    }
+    .nav-logo-ai {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--teal-light);
+      letter-spacing: -.3px;
+    }
+    .nav-logo-is {
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,.5);
+    }
+
+    .nav-divider2 {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,.1);
+      margin-right: 20px;
+      flex-shrink: 0;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      flex: 1;
+      height: 100%;
+    }
+
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,.45);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s, background .15s;
+      white-space: nowrap;
+      font-family: var(--font-body);
+    }
+    .nav-tab:hover { color: rgba(255,255,255,.75); background: rgba(255,255,255,.04); }
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: rgba(0,196,255,.06);
+    }
+    .nav-tab svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .nav-tab .tab-num {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(0,196,255,.5);
+      letter-spacing: .05em;
+    }
+    .nav-tab.active .tab-num { color: var(--accent); }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: 16px;
+      flex-shrink: 0;
+    }
+    .nav-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 100px;
+      background: rgba(34,197,94,.15);
+      color: #4ade80;
+      border: 1px solid rgba(34,197,94,.2);
+    }
+    .demo-label {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 100px;
+      background: rgba(0,196,255,.12);
+      color: var(--accent);
+      border: 1px solid rgba(0,196,255,.2);
+    }
+    .nav-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    /* ── PAGE SHELL ─────────────────────────────── */
+    .page { flex: 1; overflow-y: auto; }
+
+    /* ── SECTIONS ───────────────────────────────── */
+    .section { display: none; padding: 28px 32px; }
+    .section.active { display: block; }
+
+    /* ── PAGE HEADER ────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-top: 3px;
+    }
+    .page-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: var(--r-md);
+      border: none;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .btn-primary { background: var(--teal); color: var(--white); }
+    .btn-primary:hover { background: var(--teal-light); }
+    .btn-ghost { background: var(--white); color: var(--gray-600); border: 1px solid var(--gray-200); }
+    .btn-ghost:hover { background: var(--gray-100); }
+
+    /* ── STAT CARDS ─────────────────────────────── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-lg);
+      padding: 18px 20px;
+    }
+    .stat-label { font-size: 12px; color: var(--gray-400); font-weight: 500; margin-bottom: 6px; }
+    .stat-val {
+      font-family: var(--font-head);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .stat-val.warn { color: var(--amber); }
+    .stat-val.risk { color: var(--red); }
+    .stat-val.good { color: var(--green); }
+    .stat-meta { font-size: 11px; color: var(--gray-400); margin-top: 6px; }
+
+    /* ── TABLE ──────────────────────────────────── */
+    .table-wrap {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .table-title {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-sm);
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
+    th {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--gray-400);
+      padding: 10px 16px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    td {
+      font-size: 13px;
+      color: var(--gray-800);
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--gray-50); }
+
+    /* ── PILLS ──────────────────────────────────── */
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 100px;
+    }
+    .pill-high   { background: rgba(239,68,68,.1);   color: #ef4444; }
+    .pill-med    { background: rgba(245,158,11,.1);  color: #d97706; }
+    .pill-low    { background: rgba(34,197,94,.1);   color: #16a34a; }
+    .pill-open   { background: rgba(239,68,68,.1);   color: #ef4444; }
+    .pill-prog   { background: rgba(245,158,11,.1);  color: #d97706; }
+    .pill-review { background: rgba(99,102,241,.1);  color: #6366f1; }
+    .pill-closed { background: rgba(34,197,94,.1);   color: #16a34a; }
+    .pill-sched  { background: rgba(14,165,233,.1);  color: #0ea5e9; }
+    .pill-done   { background: rgba(34,197,94,.1);   color: #16a34a; }
+    .pill-over   { background: rgba(239,68,68,.1);   color: #ef4444; }
+
+    /* ── GRID LAYOUT ────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    /* ── RISK MATRIX ─────────────────────────────── */
+    .risk-matrix-wrap {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-lg);
+      padding: 20px;
+    }
+    .risk-matrix-title {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .risk-matrix {
+      display: grid;
+      grid-template-columns: 28px repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr) 28px;
+      gap: 3px;
+      height: 220px;
+    }
+    .rm-cell {
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .rm-label {
+      font-size: 9px;
+      color: var(--gray-400);
+      text-align: center;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rm-h { background: rgba(239,68,68,.15);  color: #ef4444; }
+    .rm-m { background: rgba(245,158,11,.12); color: #d97706; }
+    .rm-l { background: rgba(34,197,94,.12);  color: #16a34a; }
+    .rm-dot {
+      width: 20px; height: 20px;
+      background: var(--navy);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .matrix-axis-y {
+      font-size: 9px;
+      color: var(--gray-400);
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      text-align: center;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .matrix-axis-x {
+      font-size: 9px;
+      color: var(--gray-400);
+      text-align: center;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    /* ── BAR CHART ──────────────────────────────── */
+    .chart-wrap {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-lg);
+      padding: 20px;
+    }
+    .chart-title {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 120px;
+    }
+    .bar-col { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; height: 100%; justify-content: flex-end; }
+    .bar-fill {
+      width: 100%;
+      background: var(--teal);
+      border-radius: 3px 3px 0 0;
+      opacity: .7;
+      transition: opacity .2s;
+    }
+    .bar-fill:hover { opacity: 1; }
+    .bar-fill.accent { background: var(--accent); opacity: .6; }
+    .bar-fill.accent:hover { opacity: 1; }
+    .bar-col span { font-size: 10px; color: var(--gray-400); }
+
+    /* ── STATUS TABS ────────────────────────────── */
+    .status-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .status-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-md);
+      padding: 12px 18px;
+      cursor: pointer;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .status-tab:hover { border-color: var(--teal-light); box-shadow: 0 2px 8px rgba(11,85,119,.1); }
+    .status-count {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .status-name { font-size: 12px; color: var(--gray-400); }
+
+    /* ── KPI ROW ─────────────────────────────────── */
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r-lg);
+      padding: 16px 20px;
+    }
+    .kpi-label { font-size: 11px; color: var(--gray-400); font-weight: 500; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+    .kpi-val {
+      font-family: var(--font-head);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .kpi-unit { font-size: 12px; color: var(--gray-400); }
+    .kpi-trend { font-size: 12px; margin-top: 6px; }
+    .trend-up   { color: var(--green); }
+    .trend-down { color: var(--red); }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ──────────────────────────────────── -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M8 2L4 6l4 4"/>
+      </svg>
+      Back
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-logo">
+      <span class="nav-logo-ai">Ai</span><span class="nav-logo-is">IS</span>
+    </div>
+    <div class="nav-divider2"></div>
+    <div class="nav-tabs">
+
+      <button class="nav-tab active" data-section="asset">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="12" height="12" rx="1.5"/>
+          <path d="M5 6h6M5 8.5h6M5 11h4"/>
+        </svg>
+        <span class="tab-num">01</span> Asset Datasheet
+      </button>
+
+      <button class="nav-tab" data-section="rbi">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 2L2 13h12L8 2z"/><path d="M8 7v3M8 12v.5"/>
+        </svg>
+        <span class="tab-num">02</span> RBI
+      </button>
+
+      <button class="nav-tab" data-section="inspection">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="2" width="10" height="12" rx="1"/>
+          <path d="M5 6h6M5 8.5h5M5 11h3"/>
+        </svg>
+        <span class="tab-num">03</span> Inspection
+      </button>
+
+      <button class="nav-tab" data-section="anomaly">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="6"/><path d="M8 5v4M8 11v.5"/>
+        </svg>
+        <span class="tab-num">04</span> Anomaly
+      </button>
+
+      <button class="nav-tab" data-section="engineering">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="4" y="2" width="8" height="12" rx="1"/>
+          <path d="M6 5.5h4M6 8h4M6 10.5h2.5"/>
+        </svg>
+        <span class="tab-num">05</span> Engineering
+      </button>
+
+      <button class="nav-tab" data-section="kpi">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="12" height="12" rx="1.5"/>
+          <path d="M4 10l3-3.5 2.5 2 3-4"/>
+        </svg>
+        <span class="tab-num">06</span> Operational KPI
+      </button>
+
+    </div>
+    <div class="nav-right">
+      <span class="demo-label">Demo</span>
+      <span class="nav-badge">Live</span>
+      <div class="nav-avatar">JD</div>
+    </div>
+  </nav>
+
+  <!-- ── CONTENT ──────────────────────────────────── -->
+  <div class="page">
+
+    <!-- 01. Asset Datasheet -->
+    <div class="section active" id="section-asset">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Asset Datasheet</div>
+          <div class="page-subtitle">Centralised register of all tagged equipment and integrity parameters</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost">Export</button>
+          <button class="btn btn-primary">+ Add Asset</button>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Assets</div>
+          <div class="stat-val">248</div>
+          <div class="stat-meta">Across 4 facilities</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active</div>
+          <div class="stat-val good">231</div>
+          <div class="stat-meta">In service</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Under Review</div>
+          <div class="stat-val warn">12</div>
+          <div class="stat-meta">Pending update</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Decommissioned</div>
+          <div class="stat-val">5</div>
+          <div class="stat-meta">Retired assets</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="table-title">Equipment Register</span>
+          <div class="search-box">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+            Search assets…
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Asset ID</th><th>Tag Number</th><th>Equipment Type</th>
+              <th>Fluid Service</th><th>Location</th>
+              <th>Design P (bar)</th><th>Design T (°C)</th>
+              <th>Material</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>AST-001</td><td>TK-101A</td><td>Storage Tank</td><td>Crude Oil</td><td>Tank Farm A</td><td>10.3</td><td>60</td><td>A516 Gr.70</td><td><span class="pill pill-done">Active</span></td></tr>
+            <tr><td>AST-002</td><td>PV-201</td><td>Pressure Vessel</td><td>Natural Gas</td><td>Processing Unit 2</td><td>85.0</td><td>150</td><td>SA-516 Gr.70</td><td><span class="pill pill-done">Active</span></td></tr>
+            <tr><td>AST-003</td><td>PL-12A</td><td>Pipeline</td><td>Condensate</td><td>Header Line</td><td>40.0</td><td>95</td><td>API 5L X65</td><td><span class="pill pill-prog">Under Review</span></td></tr>
+            <tr><td>AST-004</td><td>HX-301</td><td>Heat Exchanger</td><td>Process Water</td><td>Utilities Block</td><td>12.0</td><td>80</td><td>SS 316L</td><td><span class="pill pill-done">Active</span></td></tr>
+            <tr><td>AST-005</td><td>V-07</td><td>Pressure Vessel</td><td>Hydrocarbon Gas</td><td>Compression Unit</td><td>120.0</td><td>200</td><td>SA-387 Gr.11</td><td><span class="pill pill-done">Active</span></td></tr>
+            <tr><td>AST-006</td><td>TK-104C</td><td>Storage Tank</td><td>Fuel Oil</td><td>Tank Farm B</td><td>5.0</td><td>45</td><td>A36</td><td><span class="pill pill-done">Active</span></td></tr>
+            <tr><td>AST-007</td><td>C-01</td><td>Compressor</td><td>Natural Gas</td><td>Comp. Station 1</td><td>150.0</td><td>120</td><td>Alloy Steel</td><td><span class="pill pill-over">Decommissioned</span></td></tr>
+            <tr><td>AST-008</td><td>PV-220</td><td>Pressure Vessel</td><td>Amine</td><td>Gas Treating Unit</td><td>20.5</td><td>130</td><td>SA-516 Gr.70</td><td><span class="pill pill-prog">Under Review</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 02. RBI -->
+    <div class="section" id="section-rbi">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Risk Based Inspection (RBI)</div>
+          <div class="page-subtitle">API 580/581 aligned risk ranking — Probability × Consequence of Failure</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost">Export Matrix</button>
+          <button class="btn btn-primary">Run Assessment</button>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-bottom:24px">
+        <div class="risk-matrix-wrap">
+          <div class="risk-matrix-title">Risk Matrix — Current Portfolio</div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div class="matrix-axis-y" style="height:200px;flex-shrink:0">Consequence of Failure →</div>
+            <div>
+              <div style="display:grid;grid-template-columns:repeat(4,52px);gap:3px;margin-bottom:3px">
+                <div class="rm-cell rm-m" style="height:52px;position:relative"><div class="rm-dot" style="position:absolute;top:5px;right:5px">V07</div></div>
+                <div class="rm-cell rm-h" style="height:52px"><div class="rm-dot">TK04</div></div>
+                <div class="rm-cell rm-h" style="height:52px"></div>
+                <div class="rm-cell rm-h" style="height:52px"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,52px);gap:3px;margin-bottom:3px">
+                <div class="rm-cell rm-l" style="height:52px"></div>
+                <div class="rm-cell rm-m" style="height:52px"><div class="rm-dot">PV201</div></div>
+                <div class="rm-cell rm-m" style="height:52px"></div>
+                <div class="rm-cell rm-h" style="height:52px"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,52px);gap:3px;margin-bottom:3px">
+                <div class="rm-cell rm-l" style="height:52px"></div>
+                <div class="rm-cell rm-l" style="height:52px"><div class="rm-dot">HX301</div></div>
+                <div class="rm-cell rm-m" style="height:52px"><div class="rm-dot">PL12A</div></div>
+                <div class="rm-cell rm-m" style="height:52px"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,52px);gap:3px;margin-bottom:5px">
+                <div class="rm-cell rm-l" style="height:52px"><div class="rm-dot">TK101</div></div>
+                <div class="rm-cell rm-l" style="height:52px"></div>
+                <div class="rm-cell rm-l" style="height:52px"></div>
+                <div class="rm-cell rm-m" style="height:52px"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,52px);gap:3px;">
+                <div class="matrix-axis-x" style="font-size:9px">Low</div>
+                <div class="matrix-axis-x" style="font-size:9px">Medium</div>
+                <div class="matrix-axis-x" style="font-size:9px">High</div>
+                <div class="matrix-axis-x" style="font-size:9px">Very High</div>
+              </div>
+              <div style="text-align:center;font-size:9px;color:var(--gray-400);margin-top:4px;letter-spacing:.05em;text-transform:uppercase">Probability of Failure →</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-title">Risk Distribution by Equipment Type</div>
+          <div class="bar-chart">
+            <div class="bar-col"><div class="bar-fill risk" style="height:70%;background:#ef4444;opacity:.7"></div><span>Tanks</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:90%;background:#0B5577;opacity:.7"></div><span>Vessels</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:55%;background:#0B5577;opacity:.7"></div><span>Pipelines</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:40%;background:#0B5577;opacity:.7"></div><span>HX</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:60%;background:#f59e0b;opacity:.7"></div><span>Comp.</span></div>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:14px">
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#ef4444;display:inline-block"></span> High</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#f59e0b;display:inline-block"></span> Medium</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#0B5577;display:inline-block"></span> Low</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="table-title">Equipment Risk Summary</span>
+          <div class="search-box">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+            Filter…
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Tag</th><th>Equipment</th><th>PoF Category</th><th>CoF Category</th><th>Risk Level</th><th>Method</th><th>Next Inspection</th><th>Interval (yr)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>TK-04</td><td>Storage Tank</td><td>High</td><td>High</td><td><span class="pill pill-high">High</span></td><td>Semi-Quantitative</td><td>Jan 2025</td><td>1</td></tr>
+            <tr><td>V-07</td><td>Pressure Vessel</td><td>Medium</td><td>High</td><td><span class="pill pill-high">High</span></td><td>Quantitative</td><td>Mar 2025</td><td>2</td></tr>
+            <tr><td>PL-12A</td><td>Pipeline</td><td>Medium</td><td>Medium</td><td><span class="pill pill-med">Medium</span></td><td>Semi-Quantitative</td><td>Jun 2025</td><td>3</td></tr>
+            <tr><td>PV-201</td><td>Pressure Vessel</td><td>Low</td><td>Medium</td><td><span class="pill pill-med">Medium</span></td><td>Qualitative</td><td>Sep 2025</td><td>3</td></tr>
+            <tr><td>HX-301</td><td>Heat Exchanger</td><td>Low</td><td>Low</td><td><span class="pill pill-low">Low</span></td><td>Qualitative</td><td>Dec 2026</td><td>5</td></tr>
+            <tr><td>TK-101A</td><td>Storage Tank</td><td>Low</td><td>Low</td><td><span class="pill pill-low">Low</span></td><td>Qualitative</td><td>Aug 2026</td><td>4</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 03. Inspection -->
+    <div class="section" id="section-inspection">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Inspection Management</div>
+          <div class="page-subtitle">Schedule, history, footage database, and inspection report records</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost">View Calendar</button>
+          <button class="btn btn-primary">+ Schedule</button>
+        </div>
+      </div>
+
+      <div class="status-tabs">
+        <div class="status-tab"><div class="status-count" style="color:var(--teal)">18</div><div class="status-name">Scheduled</div></div>
+        <div class="status-tab"><div class="status-count" style="color:var(--amber)">4</div><div class="status-name">In Progress</div></div>
+        <div class="status-tab"><div class="status-count" style="color:var(--green)">63</div><div class="status-name">Completed</div></div>
+        <div class="status-tab"><div class="status-count" style="color:var(--red)">3</div><div class="status-name">Overdue</div></div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="table-title">Inspection Schedule &amp; History</span>
+          <div class="search-box">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+            Search…
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Insp. ID</th><th>Asset Tag</th><th>Equipment</th><th>Inspection Type</th><th>Method</th><th>Scheduled Date</th><th>Inspector</th><th>Report</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>INS-2024-031</td><td>TK-04</td><td>Storage Tank</td><td>External Visual</td><td>CVI</td><td>15 Jan 2025</td><td>A. Rahman</td><td>—</td><td><span class="pill pill-sched">Scheduled</span></td></tr>
+            <tr><td>INS-2024-030</td><td>V-07</td><td>Pressure Vessel</td><td>Thickness Survey</td><td>UT</td><td>10 Jan 2025</td><td>B. Santoso</td><td>—</td><td><span class="pill pill-prog">In Progress</span></td></tr>
+            <tr><td>INS-2024-029</td><td>PL-12A</td><td>Pipeline</td><td>Corrosion Survey</td><td>UT/RT</td><td>18 Dec 2024</td><td>C. Wibowo</td><td><span style="color:var(--teal);font-weight:600;cursor:pointer">View PDF</span></td><td><span class="pill pill-done">Completed</span></td></tr>
+            <tr><td>INS-2024-028</td><td>PV-201</td><td>Pressure Vessel</td><td>Full Inspection</td><td>WFMT/UT</td><td>05 Dec 2024</td><td>A. Rahman</td><td><span style="color:var(--teal);font-weight:600;cursor:pointer">View PDF</span></td><td><span class="pill pill-done">Completed</span></td></tr>
+            <tr><td>INS-2024-027</td><td>HX-301</td><td>Heat Exchanger</td><td>Tube Bundle</td><td>ECT</td><td>01 Nov 2024</td><td>D. Pratama</td><td><span style="color:var(--teal);font-weight:600;cursor:pointer">View PDF</span></td><td><span class="pill pill-done">Completed</span></td></tr>
+            <tr><td>INS-2024-026</td><td>TK-101A</td><td>Storage Tank</td><td>Internal Visual</td><td>CVI</td><td>25 Sep 2024</td><td>B. Santoso</td><td>—</td><td><span class="pill pill-over">Overdue</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 04. Anomaly -->
+    <div class="section" id="section-anomaly">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Anomaly Management</div>
+          <div class="page-subtitle">Record, track, and resolve all detected defects and integrity findings</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost">Export</button>
+          <button class="btn btn-primary">+ Record Anomaly</button>
+        </div>
+      </div>
+
+      <div class="status-tabs">
+        <div class="status-tab"><div class="status-count" style="color:var(--red)">12</div><div class="status-name">Open</div></div>
+        <div class="status-tab"><div class="status-count" style="color:var(--amber)">5</div><div class="status-name">In Progress</div></div>
+        <div class="status-tab"><div class="status-count" style="color:#6366f1">3</div><div class="status-name">Pending Review</div></div>
+        <div class="status-tab"><div class="status-count" style="color:var(--green)">47</div><div class="status-name">Closed</div></div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="table-title">Anomaly Register</span>
+          <div class="search-box">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+            Search…
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Anomaly ID</th><th>Asset Tag</th><th>Description</th><th>Classification</th><th>Severity</th><th>Raised Date</th><th>Due Date</th><th>Assigned To</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ANO-024-001</td><td>TK-04</td><td>Wall thinning — bottom plate, SE quadrant</td><td>Corrosion</td><td><span class="pill pill-high">Critical</span></td><td>18 Dec 2024</td><td>31 Jan 2025</td><td>A. Rahman</td><td><span class="pill pill-open">Open</span></td></tr>
+            <tr><td>ANO-024-002</td><td>V-07</td><td>Pitting corrosion on nozzle N3</td><td>Corrosion</td><td><span class="pill pill-high">High</span></td><td>10 Dec 2024</td><td>28 Feb 2025</td><td>B. Santoso</td><td><span class="pill pill-prog">In Progress</span></td></tr>
+            <tr><td>ANO-024-003</td><td>PL-12A</td><td>Surface crack — 12 o'clock position, km 4.2</td><td>Cracking</td><td><span class="pill pill-high">High</span></td><td>19 Dec 2024</td><td>15 Jan 2025</td><td>C. Wibowo</td><td><span class="pill pill-open">Open</span></td></tr>
+            <tr><td>ANO-024-004</td><td>PV-201</td><td>Coating degradation — shell zone B</td><td>Coating Defect</td><td><span class="pill pill-med">Medium</span></td><td>05 Dec 2024</td><td>30 Mar 2025</td><td>D. Pratama</td><td><span class="pill pill-review">Pending Review</span></td></tr>
+            <tr><td>ANO-024-005</td><td>HX-301</td><td>Tube thinning — pass 2, rows 4–6</td><td>Corrosion</td><td><span class="pill pill-med">Medium</span></td><td>01 Nov 2024</td><td>28 Feb 2025</td><td>A. Rahman</td><td><span class="pill pill-prog">In Progress</span></td></tr>
+            <tr><td>ANO-024-006</td><td>TK-101A</td><td>Minor weld discontinuity — roof to shell joint</td><td>Weld Defect</td><td><span class="pill pill-low">Low</span></td><td>20 Oct 2024</td><td>30 Jun 2025</td><td>B. Santoso</td><td><span class="pill pill-closed">Closed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 05. Engineering Assessment -->
+    <div class="section" id="section-engineering">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Engineering Assessment</div>
+          <div class="page-subtitle">Fitness-for-Service, remaining life calculations, and corrosion analysis</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost">Export Report</button>
+          <button class="btn btn-primary">+ New Assessment</button>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-label">Total Assessments</div>
+          <div class="stat-val">34</div>
+          <div class="stat-meta">This year</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Acceptable FFS</div>
+          <div class="stat-val good">27</div>
+          <div class="stat-meta">Fit for continued service</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Conditional</div>
+          <div class="stat-val warn">5</div>
+          <div class="stat-meta">With operating limits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unacceptable</div>
+          <div class="stat-val risk">2</div>
+          <div class="stat-meta">Action required</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-toolbar">
+          <span class="table-title">Assessment Register</span>
+          <div class="search-box">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+            Search…
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Assess. ID</th><th>Asset Tag</th><th>Assessment Type</th><th>FFS Level</th><th>Anomaly Ref.</th><th>Remaining Life</th><th>MAWP (bar)</th><th>Assessed By</th><th>Date</th><th>Outcome</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ENG-2024-010</td><td>TK-04</td><td>General Metal Loss</td><td>Level 2</td><td>ANO-024-001</td><td>2.1 yr</td><td>9.8</td><td>Ir. Suharto</td><td>20 Dec 2024</td><td><span class="pill pill-over">Unacceptable</span></td></tr>
+            <tr><td>ENG-2024-009</td><td>V-07</td><td>Local Metal Loss</td><td>Level 1</td><td>ANO-024-002</td><td>4.5 yr</td><td>115.0</td><td>Ir. Kurniawan</td><td>15 Dec 2024</td><td><span class="pill pill-prog">Conditional</span></td></tr>
+            <tr><td>ENG-2024-008</td><td>PL-12A</td><td>Crack-Like Flaw</td><td>Level 2</td><td>ANO-024-003</td><td>1.8 yr</td><td>36.5</td><td>Ir. Suharto</td><td>22 Dec 2024</td><td><span class="pill pill-over">Unacceptable</span></td></tr>
+            <tr><td>ENG-2024-007</td><td>PV-201</td><td>General Metal Loss</td><td>Level 1</td><td>—</td><td>8.3 yr</td><td>84.5</td><td>Ir. Kurniawan</td><td>06 Dec 2024</td><td><span class="pill pill-done">Acceptable</span></td></tr>
+            <tr><td>ENG-2024-006</td><td>HX-301</td><td>Local Metal Loss</td><td>Level 1</td><td>ANO-024-005</td><td>6.0 yr</td><td>11.8</td><td>Ir. Suharto</td><td>05 Nov 2024</td><td><span class="pill pill-done">Acceptable</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 06. Operational KPI -->
+    <div class="section" id="section-kpi">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Operational KPI</div>
+          <div class="page-subtitle">Live production performance linked to asset integrity data</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost">Export Data</button>
+          <button class="btn btn-primary">Configure KPIs</button>
+        </div>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Production Rate</div>
+          <div class="kpi-val">12,450</div>
+          <div class="kpi-unit">BOPD</div>
+          <div class="kpi-trend trend-up">↑ 3.2% vs last month</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Avg. Operating Temp.</div>
+          <div class="kpi-val">87</div>
+          <div class="kpi-unit">°C</div>
+          <div class="kpi-trend" style="color:var(--gray-400)">→ Stable</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Avg. Operating Pressure</div>
+          <div class="kpi-val">42.3</div>
+          <div class="kpi-unit">bar</div>
+          <div class="kpi-trend trend-down">↓ 1.1% vs last month</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Corr. Inhibitor Efficiency</div>
+          <div class="kpi-val good">94%</div>
+          <div class="kpi-unit">Last 30 days</div>
+          <div class="kpi-trend trend-up">↑ 2% vs last month</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="chart-wrap">
+          <div class="chart-title">Production Rate — Last 12 Months (BOPD)</div>
+          <div class="bar-chart">
+            <div class="bar-col"><div class="bar-fill" style="height:68%"></div><span>Jan</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:72%"></div><span>Feb</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:65%"></div><span>Mar</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:80%"></div><span>Apr</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:78%"></div><span>May</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:85%"></div><span>Jun</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:88%"></div><span>Jul</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:91%"></div><span>Aug</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:87%"></div><span>Sep</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:93%"></div><span>Oct</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:89%"></div><span>Nov</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:96%"></div><span>Dec</span></div>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-title">Corrosion Inhibitor Performance — Last 12 Months (%)</div>
+          <div class="bar-chart">
+            <div class="bar-col"><div class="bar-fill" style="height:74%"></div><span>Jan</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:79%"></div><span>Feb</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:76%"></div><span>Mar</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:82%"></div><span>Apr</span></div>
+            <div class="bar-col"><div class="bar-fill" style="height:85%"></div><span>May</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:88%"></div><span>Jun</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:90%"></div><span>Jul</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:92%"></div><span>Aug</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:91%"></div><span>Sep</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:94%"></div><span>Oct</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:92%"></div><span>Nov</span></div>
+            <div class="bar-col"><div class="bar-fill accent" style="height:94%"></div><span>Dec</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+  <script>
+    const tabs = document.querySelectorAll('.nav-tab');
+    const sections = document.querySelectorAll('.section');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.section;
+        tabs.forEach(t => t.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('section-' + target).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
