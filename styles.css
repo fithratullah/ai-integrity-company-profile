@@ -554,6 +554,61 @@ ul { list-style: none; }
   color: rgba(255,255,255,.45);
   line-height: 1.55;
 }
+.aiis-feat.aiis-feat-ai {
+  background: rgba(0,196,255,.08);
+  border-color: rgba(0,196,255,.25);
+}
+.aiis-feat.aiis-feat-ai:hover {
+  background: rgba(0,196,255,.13);
+  border-color: rgba(0,196,255,.4);
+}
+
+/* AI chatbot banner */
+.aiis-chat-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(0,196,255,.08) 0%, rgba(0,196,255,.03) 100%);
+  border: 1px solid rgba(0,196,255,.25);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.aiis-chat-banner:hover {
+  background: linear-gradient(135deg, rgba(0,196,255,.14) 0%, rgba(0,196,255,.07) 100%);
+  border-color: rgba(0,196,255,.45);
+  transform: translateY(-1px);
+}
+.acb-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+  background: rgba(0,196,255,.12);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+}
+.acb-icon svg { width: 18px; height: 18px; }
+.acb-text { flex: 1; }
+.acb-text strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 3px;
+}
+.acb-text span {
+  font-size: 12px;
+  color: rgba(255,255,255,.45);
+  line-height: 1.5;
+}
+.acb-arrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
 /* Right column — mockup */
 .aiis-mockup-col { position: relative; }
