@@ -631,6 +631,84 @@
     }
     .chat-send:hover { background: var(--teal-light); }
     .chat-send svg { width: 14px; height: 14px; }
+
+    /* ── RESPONSIVE ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .stat-row { grid-template-columns: repeat(2, 1fr); }
+      .kpi-row  { grid-template-columns: repeat(2, 1fr); }
+      .two-col  { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      /* Allow body to scroll on mobile instead of fixed-height app shell */
+      html { height: auto; }
+      body { height: auto; overflow-x: hidden; overflow-y: auto; }
+      .page { overflow: visible; }
+
+      /* Navbar: back + controls on row 1, scrollable tabs on row 2 */
+      .navbar { flex-wrap: wrap; height: auto; padding: 0 12px; }
+      .nav-logo, .nav-divider, .nav-divider2 { display: none; }
+      .nav-back  { flex-grow: 1; height: 48px; order: 0; }
+      .nav-right { order: 1; height: 48px; }
+      .nav-tabs {
+        order: 2; flex: 0 0 100%; height: 40px;
+        overflow-x: auto; scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        border-top: 1px solid rgba(255,255,255,.06);
+        gap: 0;
+      }
+      .nav-tabs::-webkit-scrollbar { display: none; }
+      .nav-tab { padding: 0 10px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+      .nav-tab svg { display: none; }
+      .nav-tab .tab-num { display: none; }
+      .demo-label, .nav-badge { font-size: 9px; padding: 2px 6px; }
+      .nav-avatar { width: 26px; height: 26px; font-size: 9px; }
+
+      /* Sections */
+      .section { padding: 16px; }
+      .page-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .page-actions .btn { font-size: 12px; padding: 7px 12px; }
+
+      /* Stats & KPIs */
+      .stat-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .kpi-row  { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .stat-val { font-size: 22px; }
+      .kpi-val  { font-size: 20px; }
+
+      /* Layouts */
+      .two-col   { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr 1fr; }
+
+      /* Tables scroll horizontally */
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .table-wrap table { min-width: 560px; }
+      .table-toolbar { flex-wrap: wrap; gap: 8px; }
+
+      /* Status tabs wrap to 2×2 */
+      .status-tabs { flex-wrap: wrap; gap: 8px; }
+      .status-tab  { padding: 10px 14px; flex: 1; min-width: 120px; }
+
+      /* Chat panel: near-full-width */
+      .chat-panel {
+        width: calc(100vw - 24px);
+        right: 12px; bottom: 76px;
+        height: 440px;
+      }
+      .chat-toggle { bottom: 16px; right: 16px; width: 48px; height: 48px; }
+      .chat-toggle svg { width: 20px; height: 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .section { padding: 12px; }
+      .page-title { font-size: 18px; }
+      .page-subtitle { font-size: 11px; }
+      .three-col { grid-template-columns: 1fr; }
+      .stat-val { font-size: 20px; }
+      .kpi-val  { font-size: 18px; }
+      .status-count { font-size: 18px; }
+      .status-tab { min-width: calc(50% - 4px); padding: 8px 10px; }
+      .btn { font-size: 12px; padding: 7px 12px; }
+    }
   </style>
 </head>
 <body>
