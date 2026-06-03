@@ -508,7 +508,7 @@
       bottom: 94px;
       right: 28px;
       width: 384px;
-      height: 540px;
+      height: min(540px, calc(100vh - 130px));
       background: var(--white);
       border: 1px solid var(--gray-200);
       border-radius: 18px;
@@ -1289,7 +1289,7 @@
     function getResponse(input) {
       const q = input.toLowerCase();
 
-      if (/^(hi|hello|hey|good\s*(morning|afternoon|evening))/.test(q)) {
+      if (/^(hi\b|hello\b|hey\b|good\s*(morning|afternoon|evening))/.test(q)) {
         return `Hello! I can help you with:<br><ul>
           <li>Asset details — e.g. <em>"Tell me about TK-04"</em></li>
           <li>Risk levels — e.g. <em>"Which assets are high risk?"</em></li>
