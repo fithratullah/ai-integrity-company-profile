@@ -66,7 +66,6 @@ const statsObserver = new IntersectionObserver(entries => {
     const data = [
       { el: heroStats[0], val: 40, suffix: '%' },
       { el: heroStats[1], val: 3,  suffix: 'x' },
-      { el: heroStats[2], val: 99, suffix: '%' },
     ];
     data.forEach(({ el, val, suffix }) => {
       if (el) animateCounter(el, val, suffix);
@@ -95,19 +94,50 @@ bars.forEach(b => barsObserver.observe(b));
 /* ── CONTACT FORM SUBMIT ──────────────────────────── */
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  contactForm.addEventListener('submit', e => {
+  contactForm.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
     const original = btn.textContent;
-    btn.textContent = 'Message Sent!';
-    btn.style.background = '#22c55e';
+    btn.textContent = 'Sending…';
     btn.disabled = true;
-    setTimeout(() => {
-      btn.textContent = original;
-      btn.style.background = '';
+
+    const fd = new FormData(contactForm);
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: fd.get('access_key'),
+          subject:    fd.get('subject'),
+          name:       fd.get('name'),
+          company:    fd.get('company'),
+          email:      fd.get('email'),
+          service:    fd.get('service'),
+          message:    fd.get('message'),
+        })
+      });
+      const json = await res.json();
+      if (json.success) {
+        btn.textContent = 'Message Sent ✓';
+        btn.style.background = '#22c55e';
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.style.background = '';
+          btn.disabled = false;
+          contactForm.reset();
+        }, 4000);
+      } else {
+        throw new Error(json.message || 'Submission failed');
+      }
+    } catch {
+      btn.textContent = 'Failed — Try Again';
+      btn.style.background = '#ef4444';
       btn.disabled = false;
-      contactForm.reset();
-    }, 3000);
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+      }, 3000);
+    }
   });
 }
 

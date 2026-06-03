@@ -881,23 +881,25 @@
         </div>
         <div class="contact-form-wrap">
           <form class="contact-form" id="contactForm">
+            <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY_HERE" />
+            <input type="hidden" name="subject" value="New Enquiry — AI Integrity Company Profile" />
             <div class="form-row">
               <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" placeholder="Your name" required />
+                <input type="text" name="name" placeholder="Your name" required />
               </div>
               <div class="form-group">
                 <label>Company</label>
-                <input type="text" placeholder="Your company" />
+                <input type="text" name="company" placeholder="Your company" />
               </div>
             </div>
             <div class="form-group">
               <label>Email Address</label>
-              <input type="email" placeholder="you@company.com" required />
+              <input type="email" name="email" placeholder="you@company.com" required />
             </div>
             <div class="form-group">
               <label>Service of Interest</label>
-              <select>
+              <select name="service">
                 <option value="">Select a module...</option>
                 <option>Asset Datasheet</option>
                 <option>Risk Based Inspection (RBI)</option>
@@ -910,7 +912,7 @@
             </div>
             <div class="form-group">
               <label>Message</label>
-              <textarea rows="4" placeholder="Tell us about your assets and challenges..."></textarea>
+              <textarea name="message" rows="4" placeholder="Tell us about your assets and challenges..."></textarea>
             </div>
             <button type="submit" class="btn-primary full-width">Send Message</button>
           </form>
